@@ -1,0 +1,7 @@
+input file name: test_data, dimensions number: 2, number of points: 849
+epsilon: 0.98, minimum number of points 15
+neighbourhood selection time: 1.0299077033996582,  clustering time: 0.03744244575500488,  rand calculation time: 0.20108866691589355,  total runtime: 1.3420772552490234
+num of discovered clusters: 6, num of core points: 683, num of border points: 83, num of noise points: 83
+average number of distance caluclations for point: 424.0
+Stats for RAND - TP: 61803, TN: 284696, number of pairs: 359976.0,RAND: 0.9625613929817544
+average number of clusters for border point: 1.0963855421686748

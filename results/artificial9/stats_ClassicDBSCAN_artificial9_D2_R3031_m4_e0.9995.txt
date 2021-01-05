@@ -1,0 +1,7 @@
+input file name: artificial9, dimensions number: 2, number of points: 3031
+epsilon: 0.9995, minimum number of points 4
+neighbourhood selection time: 10.517598390579224,  clustering time: 0.41816091537475586,  rand calculation time: 2.6287341117858887,  total runtime: 13.771955490112305
+num of discovered clusters: 58, num of core points: 2394, num of border points: 192, num of noise points: 445
+average number of distance caluclations for point: 1515.0
+Stats for RAND - TP: 489950, TN: 3679052, number of pairs: 4591965.0,RAND: 0.9078906306994936
+average number of clusters for border point: 1.0416666666666667

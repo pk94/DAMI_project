@@ -1,0 +1,7 @@
+input file name: clutot710k, dimensions number: 2, number of points: 10000
+epsilon: 0.9995, minimum number of points 15
+neighbourhood selection time: 125.61801886558533,  clustering time: 33.169644832611084,  rand calculation time: 33.89951491355896,  total runtime: 193.73776769638062
+num of discovered clusters: 29, num of core points: 6080, num of border points: 1159, num of noise points: 2761
+average number of distance caluclations for point: 4999.5
+Stats for RAND - TP: 6022699, TN: 38241404, number of pairs: 49995000.0,RAND: 0.885370597059706
+average number of clusters for border point: 1.0224331320103537
