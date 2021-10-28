@@ -1,7 +1,6 @@
 # DBSCAN+
-DBSCAN+ is a simple script for clustering using DBSCAN algorithm. All of three implementations are "+" versions witch is
-slight modification of original DBSCAN algorithm - it means that each of non-core points can be classified to more than 
-one cluster. All implemented versions use Tanimoto similarity measure as a distance measure. All of them are also
+DBSCAN+ is a simple script for clustering using the DBSCAN algorithm. All of three implementations are "+" versions which are
+a slight modification of the original DBSCAN algorithm - it means that each of non-core points can be classified to more than one cluster. All implemented versions use the Tanimoto similarity measure as a distance measure. All of them are also
 optimized - candidates for potential neighbours are preselected using case-dependent distance bounds.
 
 The implemented versions include:
@@ -10,27 +9,27 @@ The implemented versions include:
 * ZPNDBSCAN - DBSCAN+ implementation for ZPN vectors
 
 ## Usage
-Scripts uses four optional arguments as follows:
+Scripts use four optional arguments as follows:
 * --dataset_path - path to the dataset
 * --version - version of DBSCAN+ algorithm (possible choices: ClassicDBSCAN, RVVDBSCAN, PNDBSCAN)
-* --eps - value of epsilon
+* --eps - the value of epsilon
 * --min_points - minimal number of neighbour points for a point to be considered as a core point
 
 Example usage
 
 ```bash
-python dbscan.py --dataset_path test_dataset.py --version ClassicDBSCAN --eps 0.1 --min_points 11
+python dbscan.py --dataset_path datasets/test_data.csv --version ClassicDBSCAN --eps 0.1 --min_points 11
 ```
 
-Input data is a csv file with vectors coordinates as a columns. Real cluster class must be in the last column. Data
+Input data is a CSV file with vectors coordinates as columns. Real cluster class must be in the last column. Data
 starts from the first row.
 
 Execution produces two files. out* contains all dataset points and clusters to which they are assigned. stats* file
-contains all experiment data including execution time, number of discovered clusters, clustering qulity measures etc.
+contains all experiment data including execution time, number of discovered clusters, clustering quality measures etc.
 
 ## Implementation
-Most of implementation is contained in base abstract class called DBSCAN. Implemented versions differ only in 
-neighbourhood_interval function (functon that calculates interval used for selecting potential neighbours for a point),
+Most of the implementation is contained in a base abstract class called DBSCAN. Implemented versions differ only in 
+neighbourhood_interval function (a function that calculates interval used for selecting potential neighbours for a point),
 so only this function is implemented in each of child classes.
 
 ## Example results
@@ -52,13 +51,13 @@ Epsilon: 0.9995, MinPoints: 15, Discovered clusters: 29, RAND score: 0.885
 ![alt text](results/clutot710k/fig_ClassicDBSCAN_clutot710k_D2_R10000_m15_e0.9995.png)
 
 ### Letter
-Epsilon: , MinPoints: , Discovered clusters: , RAND score: 
+Epsilon: 0.99, MinPoints: 2, Discovered clusters: 904, RAND score: 0.897
 ![alt text](results/artificial9/fig_ClassicDBSCAN_artificial9_D2_R3031_m4_e0.9995.png)
 
 ## Conlcusions
-Presented clustering algorithms achieve high RAND scores, However, because of using Tanimoto similarity measure instead
-of euclidean distance the results are quite different than the results obtained using basic DBSCAN. Two points, that
-have the same euclidean distance can have very different Tanimoto similarity measure dependent on theirs location. The
+Presented clustering algorithms achieve high RAND scores, however, because of using Tanimoto similarity measure instead
+of Euclidean distance, the results are quite different than the results obtained using basic DBSCAN. Two points, that
+have the same Euclidean distance can have very different Tanimoto similarity measure dependent on their location. The
 closer these two points are to the point (0, 0) the more different the Tanimoto measure between them will be. You can
 easily observe this phenomenon on the attached results.
 

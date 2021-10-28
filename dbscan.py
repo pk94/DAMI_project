@@ -115,12 +115,13 @@ class DBSCAN(abc.ABC):
         dim_columns = [f'dim_{idx}' for idx in range(len(self.dataset[0].coordinates))]
         out_dataframe = pd.DataFrame(columns=['id'] + dim_columns + ['sim_calc_num', 'point_type', 'cluster_id'])
         for point in self.dataset:
-            if point.is_core:
-                point.point_type = 1
-            elif not point.is_core and not point.is_noise:
-                point.point_type = 0
-            else:
+            if point.is_noise:
                 point.point_type = -1
+            else:
+                if point.is_core:
+                    point.point_type = 1
+                else:
+                    point.point_type = 0
             row_dict = {dim: value for dim, value in zip(dim_columns, point.coordinates)}
             row_dict.update(
                 {'id': point.unsorted_id, 'sim_calc_num': point.sim_calc_num, 'point_type': point.point_type,
@@ -170,7 +171,7 @@ class DBSCAN(abc.ABC):
 
 
 class ClassicDBSCAN(DBSCAN):
-    def __init__(self, dataset, eps=0.3, min_points=5):
+    def __init__(self, dataset, eps=0.99, min_points=5):
         super(ClassicDBSCAN, self).__init__(dataset, eps, min_points)
 
     def neighbourhood_interval(self, vec_len):
@@ -190,7 +191,7 @@ class ClassicDBSCAN(DBSCAN):
 
 
 class ZPNDBSCAN(DBSCAN):
-    def __init__(self, dataset, eps=0.3, min_points=5):
+    def __init__(self, dataset, eps=0.99, min_points=5):
         super(ZPNDBSCAN, self).__init__(dataset, eps, min_points)
 
     def neighbourhood_interval(self, vec_len):
@@ -200,7 +201,7 @@ class ZPNDBSCAN(DBSCAN):
 
 
 class RVVDBSCAN(DBSCAN):
-    def __init__(self, dataset, eps=0.3, min_points=5):
+    def __init__(self, dataset, eps=0.99, min_points=5):
         super(RVVDBSCAN, self).__init__(dataset, eps, min_points)
 
     def neighbourhood_interval(self, vec_len):
@@ -238,26 +239,41 @@ class Point():
     def add_neighbour(self, neighbour_idx):
         self.neighbours.append(neighbour_idx)
 
-dbscan = ClassicDBSCAN('datasets/letter.csv', 0.97, 15)
-if len(dbscan.dataset[0].coordinates) == 2:
-        dbscan.plot2d_clusters()
 
-# if __name__ == '__main__':
-#     parser = argparse.ArgumentParser()
-#     parser.add_argument("--dataset_path", help="path to the dataset", default="datasets/test_data.csv")
-#     parser.add_argument("--version", help="version of DBSCAN+ algorithm (possible choices: ClassicDBSCAN, RVVDBSCAN,"
-#                                         " ZPNDBSCAN", default="ClassicDBSCAN")
-#     parser.add_argument("--eps", help="value of epsilon", default=0.1)
-#     parser.add_argument("--min_points", help="minimal number of neighbour points for a point to be considered as a core"
-#                                            " point", default=11)
-#     args = parser.parse_args()
-#     eps = float(args.eps)
-#     min_points = int(args.min_points)
-#     if args.version == "ClassicDBSCAN":
-#         dbscan = ClassicDBSCAN(args.dataset_path, eps, min_points)
-#     if args.version == "RVVDBSCAN":
-#         dbscan = RVVDBSCAN(args.dataset_path, eps, min_points)
-#     if args.version == "ZPNDBSCAN":
-#         dbscan = ZPNDBSCAN(args.dataset_path, eps, min_points)
-#     if len(dbscan.dataset[0].coordinates) == 2:
-#         dbscan.plot2d_clusters()
+def get_simple_dataset(savepath):
+    left_points, right_points = [], []
+    num_samples = 20
+    y_coords = np.linspace(-1, 1, num=num_samples // 2)
+    labels = [0] * (num_samples // 2) + [1] * (num_samples // 2)
+    for i in range(num_samples // 2):
+        left_points.append((-1.0, y_coords[i]))
+        right_points.append((1.0, y_coords[i]))
+    points = left_points + right_points
+    small_dataset = pd.DataFrame()
+    small_dataset['x'] = [point[0] for point in points]
+    small_dataset['y'] = [point[1] for point in points]
+    small_dataset['class'] = np.array(labels)
+    middle_point = {'x': 0, 'y': 1, "class": 0}
+    small_dataset = small_dataset.append(middle_point, ignore_index=True)
+    small_dataset.to_csv(savepath, index=False, header=False)
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset_path", help="path to the dataset", default="datasets/test_data.csv")
+    parser.add_argument("--version", help="version of DBSCAN+ algorithm (possible choices: ClassicDBSCAN, RVVDBSCAN,"
+                                        " ZPNDBSCAN", default="ClassicDBSCAN")
+    parser.add_argument("--eps", help="value of epsilon", default=0.99)
+    parser.add_argument("--min_points", help="minimal number of neighbour points for a point to be considered as a core"
+                                           " point", default=5)
+    args = parser.parse_args()
+    eps = float(args.eps)
+    min_points = int(args.min_points)
+    if args.version == "ClassicDBSCAN":
+        dbscan = ClassicDBSCAN(args.dataset_path, eps, min_points)
+    if args.version == "RVVDBSCAN":
+        dbscan = RVVDBSCAN(args.dataset_path, eps, min_points)
+    if args.version == "ZPNDBSCAN":
+        dbscan = ZPNDBSCAN(args.dataset_path, eps, min_points)
+    if len(dbscan.dataset[0].coordinates) == 2:
+        dbscan.plot2d_clusters()
